@@ -6,7 +6,7 @@ published: true
 ---
 
 ## Implicit Representation ##
-The word implicit means "suggested though not directly expressed". Following this nuance, in implicit representations the 3D information is not definitely expressed. Rather in this method the neural network is assumed to learn the 3D information and its weights are the representation of the scene. So this forms the ideal recipe for supervised learning where we learn the 3D information by feeding the network with the scene information represented using the camera parameters. Although it seems to be a perfect way to represent a scene, it has its own merits and de-merits.
+The word implicit means "suggested though not directly expressed". Following this nuance, in implicit representations the 3D information is not definitely expressed. Rather in this method the neural network is assumed to learn the 3D information and its weights are the representation of the scene. So this forms the ideal recipe for supervised learning where we learn the 3D information by feeding the network with the scene information represented using the camera parameters. Although it seems to be a perfect way to represent a scene, it has its own merits and de-merits. {% Chan2021 %}
 
 ![_config.yml]({{ site.baseurl }}/images/Nerf_2.PNG)
 *Here is a figure description*
@@ -22,3 +22,5 @@ So essentially in the NeRF paper, a single MLP is overfitted for a scene. By ove
 The network used in NeRF is a straightforward MLP with no convolutions involved. For this representation to be multiview consistent the network is restricted to predict the density as a function of only the location x, while allowing the RGB color c to be predicted as a function of both location and viewing direction.
 
 Although using this approach we get the complete information of the scene, the downside to this approach is its inference time. For querying one input we would need an forward pass through the deep MLP network. And hence explicit representations were used to address this issue.
+
+{% bibliography --cited %}
