@@ -10,7 +10,7 @@ The word implicit means "suggested though not directly expressed". Following thi
 
 $$\begin{figure} \includegraphics{https://github.com/sidharth5n/sidharth5n.github.io/blob/master/_posts/Nerf_2.jpg} \end{figure}$$
 
-
+![_config.yml]({{ site.baseurl }}/images/config.png)
 ![Nerf_2_final.jpg]({{ site.baseurl }}/_posts/Nerf_2.jpg)
 ![Nerf_2.jpg](https://github.com/sidharth5n/sidharth5n.github.io/blob/master/_posts/Nerf_2.jpg)
 
