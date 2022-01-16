@@ -79,7 +79,7 @@ gems:
   - jekyll-scholar
 
 scholar:
-    style: acm-sig-proceedings
+    style: my-ieee
 
 # Exclude these files from your production _site
 exclude:
