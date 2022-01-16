@@ -66,6 +66,7 @@ h4 {
 
 p {
   margin: 15px 0;
+  text-align: justify;
 }
 
 a {
@@ -280,6 +281,11 @@ nav {
 
 footer {
   padding: 20px 0;
+  text-align: center;
+}
+
+img + em {
+  display: block; 
   text-align: center;
 }
 
