@@ -33,6 +33,6 @@ Unlike the implicit representation explained above, in this method we express 3D
 In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the chair shown in figure. If we were to approximate this chair's surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the chair surface is present at this voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the chair's surface. To also represent the finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the chair's surface. 
 
 ![_config.yml]({{ site.baseurl }}/images/voxel_2.jpg)
-*Figure 3 : A01 – A05 are examples of how voxel grids of different resolutions model the surface of a car.*
+*Figure 3 : $$ A01 – A05 $$ are examples of how voxel grids of different resolutions model the surface of a car.*
 
 This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $$ O(1) $$ time. However this method is inefficient in terms of memory usage as voxel grid requires $$O(V^3)$$ memory for a side of length $$V$$.
