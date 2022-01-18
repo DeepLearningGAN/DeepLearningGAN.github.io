@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 3D Scene Representation
-author: Sidharth
+author: Sidharth Nair, Meher Abhijeet
 published: true
 ---
 
@@ -23,5 +23,9 @@ Before exploring its efficiency, we will look at NeRF (Neural Radiance Fields) {
 To intuitively understand the output color and density information given by the network, consider a camera ray passing through the scene as shown in Figure 1. The final color information that we see on the image formed is all embedded in this ray. The final color contributed by this ray is the accumulation of all the color surfaces this ray passes through before reaching the camera. And on its way to the camera the ray can pass through different types of transparent, opaque and translucent surfaces. The network essentially tries to trace out the path through which the ray has travelled and this path can be expressed using the color and density information. The output color gives the RGB information of a point $$\begin{bmatrix} x &y &z \end{bmatrix}^T$$ on the path while the output density is the probability of a surface being present at that point. Hence, by combining the color and density information we can reconstruct the scene.
 
 Although using this approach we get the complete information of the scene, the downside to this approach is its inference time. For querying one input we would need an forward pass through the deep MLP network. And hence explicit representations were introduced to address this issue.
+
+## Explicit Representation ##
+
+Unlike the implicit representation explained above, in this approach we express 3D data using explicitly defined shapes. In this approach, we represent the surface by learning a function $f : \mathbb{R}^2 \rightarrow \mathbb{R}^3$ using images. An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes. In theory, voxels a fast modeling technique for replicating reality as our world is ultimately made up something similar to voxels. Hence, generating such a representation should be fast. Further, we can replicate real world objects with a proper rendering technique when armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the chair shown in figure. If we were to approximate this chair's surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a 1 or 0 to represent whether or not a part of the chair surface is present at this voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the chair's surface. To also represent the finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the chair's surface. This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $O(1)$ time. To extract  
 
 {% bibliography --cited %}
