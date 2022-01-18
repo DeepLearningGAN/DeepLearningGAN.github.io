@@ -34,6 +34,6 @@ In theory, voxel grid is a fast technique for modelling complex surfaces. We can
 
 ![_config.yml]({{ site.baseurl }}/images/voxel_2.jpg)
 
-This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $$ O(1) $$ time. However this method is inefficient in terms of memory usage. For a side of length $$V$$, voxel grid requires $$O(V^3)$$ memory.
+This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $$ O(1) $$ time. However this method is inefficient in terms of memory usage as voxel grid requires $$O(V^3)$$ memory for a side of length $$V$$.
 
 {% bibliography --cited %}
