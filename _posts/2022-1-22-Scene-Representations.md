@@ -5,7 +5,7 @@ author: Sidharth Nair, Meher Abhijeet
 published: true
 ---
 
-Rendering multiview images of a scene has been a long standing research area in the field of cumputer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.
+Rendering multiview images of a scene has been a long standing research area in the field of computer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.
 
 ![_config.yml]({{ site.baseurl }}/images/Nerf_1.PNG)
 *Figure 1 : Given multiple input images of a scene with varying viewing directions, a multi view rendering network ( in this case {% cite NERF %} ) renders new views of the scene.*
