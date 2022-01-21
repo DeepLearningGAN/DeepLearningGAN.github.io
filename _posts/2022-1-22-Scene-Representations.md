@@ -47,4 +47,4 @@ This method takes the best of the two approaches mentioned above and hence is al
 The networks shown in Figure 5, summarize the three aproaches mentioned above. The implicit network is accurate but computationally heavy. On the other hand the explicit network is computationally light but memory intensive and the novel hybrid approach finds the middle ground by being light weight and computationally fast. 
 
 ![_config.yml]({{ site.baseurl }}/images/hybrid_1.jpg)
-*Figure 5 : Comparison between Implicit, Explicit and Hybrid representations.*
+*Figure 5 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.*
