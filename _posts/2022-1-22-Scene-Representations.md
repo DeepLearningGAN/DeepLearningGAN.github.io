@@ -26,10 +26,10 @@ Although using this method we get the complete information of the scene, the dow
 
 ## Explicit Representation ##
 
-Unlike the implicit representation explained above, in this method we express 3D data using explicitly defined shapes ( spheres, cubes, cuboids etc.. ). In this approach, we represent the surface by learning a function $$( f )$$ which maps input images to a 3D grid $$ f : \mathbb{R}^2 \rightarrow \mathbb{R}^3 $$. An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes.
+Unlike the implicit representation explained above, in this method we express 3D data using explicitly defined shapes like spheres, cubes, cuboids etc. In this approach, we represent the surface by learning a function $$f$$ which maps input images to a 3D grid $$f : \mathbb{R}^2 \rightarrow \mathbb{R}^3 $$. An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes.
 
 ![_config.yml]({{ site.baseurl }}/images/voxel_1.jpeg)
-*Figure 3 : Differnce between a pixel and voxel.*
+*Figure 3 : Difference between a pixel and voxel.*
 
 In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car's surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car's surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface. 
 
