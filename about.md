@@ -4,8 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Deep learning enthusiasts exploring advancements in the field of Artfificial Intelligence.
+This blog is maintained by Deep learning enthusiasts exploring advancements in the field of Artfificial Intelligence.
 
 ### Contact Us
 
-[email@domain.com](deeplearninggan@gmail.com)
+[deeplearninggan@gmail.com](deeplearninggan@gmail.com)
