@@ -56,14 +56,14 @@ The networks shown in Figure 6, summarize the three aproaches mentioned above. T
 
 ## References ##
 
-$$  1)  R.  Chan,  C.  Z.  Lin,  M.  A.  Chan,  K.  Nagano,  B.  Pan,  S.  D.  Mello,O.  Gallo,  L.  Guibas,  J.  Tremblay,  S.  Khamis,  T.  Karras,  and  G.  Wet-zstein,  Efficient  geometry-aware  3D  generative  adversarial  networks, inarXiv, 2021. $$
+1)  R.  Chan,  C.  Z.  Lin,  M.  A.  Chan,  K.  Nagano,  B.  Pan,  S.  D.  Mello,O.  Gallo,  L.  Guibas,  J.  Tremblay,  S.  Khamis,  T.  Karras,  and  G.  Wet-zstein,  Efficient  geometry-aware  3D  generative  adversarial  networks, inarXiv, 2021. 
 
 
-$$  2)  B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi,and R. Ng, Nerf: Representing scenes as neural radiance fields for view synthesis, inECCV, 2020. $$
+2)  B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi,and R. Ng, Nerf: Representing scenes as neural radiance fields for view synthesis, inECCV, 2020. 
 
 
-$$  3)  Sitzmann,    J.    Thies,    F.    Heide,    M.    Nießner,    G.    Wetzstein, and   M.   Zollh ̈ofer,   Deepvoxels:   Learning   persistent   3d   feature embeddings. $$
+3)  Sitzmann,    J.    Thies,    F.    Heide,    M.    Nießner,    G.    Wetzstein, and   M.   Zollh ̈ofer,   Deepvoxels:   Learning   persistent   3d   feature embeddings.
 
 
-$$  4)  Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila, Analyzing  and  improving  the  image  quality  of  stylegan, CoRR. $$
+4)  Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila, Analyzing  and  improving  the  image  quality  of  stylegan, CoRR. 
 
