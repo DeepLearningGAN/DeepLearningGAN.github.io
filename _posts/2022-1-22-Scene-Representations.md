@@ -31,7 +31,7 @@ Unlike the implicit representation explained above, in this method we express 3D
 ![_config.yml]({{ site.baseurl }}/images/voxel_1.jpeg)
 *Figure 3 : Difference between a pixel and voxel.*
 
-In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car's surface using the 3D voxel grid $$[3]$$, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car's surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface. 
+In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car's surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car's surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface. 
 
 ![_config.yml]({{ site.baseurl }}/images/voxel_2.jpg)
 *Figure 4 : $$ A01 – A05 $$ are examples of how voxel grids of different resolutions model the surface of a car.*
@@ -40,7 +40,7 @@ This approach addresses the inference time problem associated with the implicit 
 
 ## Hybrid Representation ##
 
-This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation $$[1]$$ which gives color and volume density as the final 3D representation. First, a generator $$[4]$$ modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position $$ ( x \in \mathbb{R}^3 ) $$ is projected onto each of the three feature planes retrieving the corresponding feature vectors $$ ( F_{xy}, F{xz}, F{yz} ) $$ (Figure 5). 
+This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation {% cite 3DGAN %} which gives color and volume density as the final 3D representation. First, a generator {% cite StyleGAN2 %} modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position $$(x \in \mathbb{R}^3)$$ is projected onto each of the three feature planes retrieving the corresponding feature vectors $$ (F_{xy}, F_{xz}, F_{yz})$$ (Figure 5). 
 
 ![_config.yml]({{ site.baseurl }}/images/tri-plane-hybrid.jpg)
 *Figure 5 : Sub network from {% cite 3DGAN %} which generates the tri-plane 3D representation*
@@ -54,16 +54,4 @@ The networks shown in Figure 6, summarize the three aproaches mentioned above. T
 ![_config.yml]({{ site.baseurl }}/images/hybrid_1.jpg)
 *Figure 6 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.*
 
-## References ##
-
-1)  R.  Chan,  C.  Z.  Lin,  M.  A.  Chan,  K.  Nagano,  B.  Pan,  S.  D.  Mello,O.  Gallo,  L.  Guibas,  J.  Tremblay,  S.  Khamis,  T.  Karras,  and  G.  Wet-zstein,  Efficient  geometry-aware  3D  generative  adversarial  networks, in arXiv, 2021. 
-
-
-2)  B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi,and R. Ng, Nerf: Representing scenes as neural radiance fields for view synthesis, in ECCV, 2020. 
-
-
-3)  Sitzmann,    J.    Thies,    F.    Heide,    M.    Nießner,    G.    Wetzstein, and   M.   Zollh ̈ofer,   Deepvoxels:   Learning   persistent   3d   feature embeddings.
-
-
-4)  Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila, Analyzing  and  improving  the  image  quality  of  stylegan, CoRR. 
-
+{% bibliography --cited %}
