@@ -2,7 +2,7 @@
 layout: post
 title: 3D Scene Representation
 author: Sidharth Nair, Meher Abhijeet
-published: false
+published: true
 ---
 
 Rendering multiview images of a scene has been a long standing research area in the field of computer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.
