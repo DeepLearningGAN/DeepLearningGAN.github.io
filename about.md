@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-This blog is maintained by Deep learning enthusiasts exploring advancements in the field of Artfificial Intelligence.
+This blog is maintained by deep learning enthusiasts exploring advancements in the field of Artfificial Intelligence.
 
 ### Contact Us
 
