@@ -43,7 +43,7 @@ This approach addresses the inference time problem associated with the implicit 
 This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation [*cite 3D GAN*] which gives color and volume density as the final 3D representation. First, a generator [*cite StyleGAN2*] modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position is projected onto each of the three feature planes retrieving the corresponding feature vectors. 
 
 ![_config.yml]({{ site.baseurl }}/images/tri-plane-hybrid.jpg)
-*Figure 5 : Sub network from [*cite 3D GAN*] which generates the tri-plane 3D representation*
+*Figure 5 : Sub network from $[cite 3D GAN]$ which generates the tri-plane 3D representation*
 
 For a side length of $$N$$, the tri-plane representation generates explicit features $$\in \mathbb{R}^{N \times N \times C}$$ along each plane. This implies, tri-plane representation scales with $$O\left(N^2\right)$$ while Voxel grid scales with $$O\left(N^3\right)$$. As a consequence, tri-plane representation can use higher resolution features and capture greater detail for the same amount of memory. This allows the model to shift bulk of the expressive power of 3D representation to the explicit representation and keep the decoder network small. Thus, the computational cost inccured during inference is much less when compared to implicit representation like NeRF.
 
