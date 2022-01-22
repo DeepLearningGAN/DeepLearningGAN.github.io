@@ -10,7 +10,7 @@ Rendering multiview images of a scene has been a long standing research area in 
 ![_config.yml]({{ site.baseurl }}/images/Nerf_1.PNG)
 *Figure 1 : Given multiple input images of a scene with varying viewing directions, a multi view rendering network {% cite NERF %} renders new views of the scene.*
 
-Before rendering an image, we first try to represent the scene using an intermediate representation that provides 3D information. Based on the characteristics of these representations they are divided into Explicit, Implicit and Hybrid. In this blog we try to intuitively explain Explicit, Implicit and Hybrid representations as a build up to explaining the method proposed in Efficient Geometry-aware 3D Generative Adversarial Networks $$[1]$$.
+Before rendering an image, we first try to represent the scene using an intermediate representation that provides 3D information. Based on the characteristics of these representations they are divided into Explicit, Implicit and Hybrid. In this blog we try to intuitively explain Explicit, Implicit and Hybrid representations as a build up to explaining the method proposed in Efficient Geometry-aware 3D Generative Adversarial Networks {% cite 3DGAN %}.
 
 ## Implicit Representation ##
 The word implicit means "suggested though not directly expressed". Following this nuance, in implicit representations the 3D information is not definitely expressed. Rather, the 3D scene information is represented using a function. So this forms the ideal recipe for supervised learning where we learn the 3D information by feeding the network with the scene information represented using the camera parameters. Although it seems to be a perfect way to represent a scene, it has its own de-merits.
