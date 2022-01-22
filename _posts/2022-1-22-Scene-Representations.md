@@ -65,5 +65,5 @@ $$ 2) B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi,a
 $$ 3) Sitzmann,    J.    Thies,    F.    Heide,    M.    Nießner,    G.    Wetzstein,and   M.   Zollh ̈ofer,   “Deepvoxels:   Learning   persistent   3d   featureembeddings,”CoRR,  vol.  abs/1812.01024,  2018. $$
 
 
-$$ 4) .  Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila,“Analyzing  and  improving  the  image  quality  of  stylegan,”CoRR,  vol.abs/1912.04958,   2019. $$
+$$ 4) Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila,“Analyzing  and  improving  the  image  quality  of  stylegan,”CoRR,  vol.abs/1912.04958,   2019. $$
 
