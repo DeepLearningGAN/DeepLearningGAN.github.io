@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3D Scene Representation – All About Awesome GANs – </title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Rendering multiview images of a scene has been a long standing research area in the field of computer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.
+" />
+    <meta property="og:description" content="Rendering multiview images of a scene has been a long standing research area in the field of computer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.
+" />
+    
+    <meta name="author" content="All About Awesome GANs" />
+
+    
+    <meta property="og:title" content="3D Scene Representation" />
+    <meta property="twitter:title" content="3D Scene Representation" />
+    
+
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="All About Awesome GANs - " href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/jekyll-logo.png" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">All About Awesome GANs</a></h1>
+            <p class="site-description"></p>
+          </div>
+
+          <nav>
+            <a href="/">Blog</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <center>
+  <h1 style="margin-bottom: 0;">3D Scene Representation</h1>
+  <h3 style = "color:DodgerBlue; margin-top: 0; margin-bottom: 1cm">Sidharth Nair, Meher Abhijeet</h3>
+  </center>
+
+  <div class="entry">
+    <p>Rendering multiview images of a scene has been a long standing research area in the field of computer vision. Given multiple images of a scene with varying viewing directions, the task of multiview image synthesis is to generate photorealistic images of the scene with novel views.</p>
+
+<p><img src="/images/Nerf_1.PNG" alt="_config.yml" />
+<em>Figure 1 : Given multiple input images of a scene with varying viewing directions, a multi view rendering network <a class="citation" href="#NERF">[1]</a> renders new views of the scene.</em></p>
+
+<p>Before rendering an image, we first try to represent the scene using an intermediate representation that provides 3D information. Based on the characteristics of these representations they are divided into Explicit, Implicit and Hybrid. In this blog we try to intuitively explain Explicit, Implicit and Hybrid representations as a build up to explaining the method proposed in Efficient Geometry-aware 3D Generative Adversarial Networks \([1]\).</p>
+
+<h2 id="implicit-representation">Implicit Representation</h2>
+<p>The word implicit means “suggested though not directly expressed”. Following this nuance, in implicit representations the 3D information is not definitely expressed. Rather, the 3D scene information is represented using a function. So this forms the ideal recipe for supervised learning where we learn the 3D information by feeding the network with the scene information represented using the camera parameters. Although it seems to be a perfect way to represent a scene, it has its own de-merits.</p>
+
+<p>Before exploring its efficiency, we will look at Nerf (Neural Radiance Fields) <a class="citation" href="#NERF">[1]</a> as an example for implicit representation. In this work, a deep fully connected network learns the color \(( \begin{bmatrix} R &amp;G &amp;B \end{bmatrix}^T \in \mathbb{R}^3)\) and density \((\sigma \in \mathbb{R})\) information of the scene as a function of the location of a point \(\begin{bmatrix} x &amp;y &amp;z \end{bmatrix}^T\) along a ray and the viewing direction of the scene \(\begin{bmatrix} \theta &amp;\phi \end{bmatrix}^T\). In practice, viewing direction is expressed as a 3D unit vector. The network is learnt by overfitting on a scene i.e. showing images of the same scene captured from different views. During inference, the network regresses the color and density information when queried with a novel camera location and direction.</p>
+
+<p><img src="/images/Nerf_2.PNG" alt="_config.yml" />
+<em>Figure 2 : A point on the ray along with its viewing direction as shown in (a) is passed through \(( F_{\theta} )\) which is trained to regresses the color and density information as shown in (b). This regressed density and color which vary along the ray (c) is now passed through a volume rendering network to generate an image of the scene which satisfies the underlying viewing direction, \(\begin{bmatrix} \theta &amp;\phi \end{bmatrix}^T\). The entire network comprising of \(F_{\theta}\) and rendering network is trained using the rendering loss which is the squared \(L_2\) norm between the generated image and the the ground truth image (d).</em></p>
+
+<p>To intuitively understand the output color and density information given by the network, consider a camera ray passing through the scene as shown in Figure 2. The final color information that we see on the image formed is all embedded in this ray. The final color contributed by this ray is the accumulation of all the color surfaces this ray passes through before reaching the camera. And on its way to the camera the ray can pass through different types of transparent, opaque and translucent surfaces. The network essentially tries to trace out the path through which the ray has travelled and this path can be expressed using the color and density information. The output color gives the RGB information of a point \(\begin{bmatrix} x &amp;y &amp;z \end{bmatrix}^T\) on the path while the output density is the probability of a surface being present at that point. Hence, by combining the color and density information we can reconstruct the scene.</p>
+
+<p>Although using this method we get the complete information of the scene, the downside to this approach is its inference time. For querying one input we would need an forward pass through the deep MLP network. And hence explicit representations were introduced to address this issue.</p>
+
+<h2 id="explicit-representation">Explicit Representation</h2>
+
+<p>Unlike the implicit representation explained above, in this method we express 3D data using explicitly defined shapes like spheres, cubes, cuboids etc. In this approach, we represent the surface by learning a function \(f\) which maps input images to a 3D grid \(f : \mathbb{R}^2 \rightarrow \mathbb{R}^3\). An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes.</p>
+
+<p><img src="/images/voxel_1.jpeg" alt="_config.yml" />
+<em>Figure 3 : Difference between a pixel and voxel.</em></p>
+
+<p>In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car’s surface using the 3D voxel grid \([3]\), in the most basic way we fill up each voxel of the grid with a \(1\) or \(0\) to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car’s surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface.</p>
+
+<p><img src="/images/voxel_2.jpg" alt="_config.yml" />
+<em>Figure 4 : \(A01 – A05\) are examples of how voxel grids of different resolutions model the surface of a car.</em></p>
+
+<p>This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in \(O(1)\) time. However this method is inefficient in terms of memory usage as voxel grid requires \(O(N^3)\) memory for a side of length \(N\).</p>
+
+<h2 id="hybrid-representation">Hybrid Representation</h2>
+
+<p>This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation \([1]\) which gives color and volume density as the final 3D representation. First, a generator \([4]\) modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position \(( x \in \mathbb{R}^3 )\) is projected onto each of the three feature planes retrieving the corresponding feature vectors \(( F_{xy}, F{xz}, F{yz} )\) (Figure 5).</p>
+
+<p><img src="/images/tri-plane-hybrid.jpg" alt="_config.yml" />
+<em>Figure 5 : Sub network from <a class="citation" href="#3DGAN">[2]</a> which generates the tri-plane 3D representation</em></p>
+
+<p>For a side of length \(N\), the tri-plane representation generates explicit features \(\in \mathbb{R}^{N \times N \times C}\) along each plane, where \(C\) is the number of channels. This implies, tri-plane representation scales with \(O\left(N^2\right)\) while Voxel grid scales with \(O\left(N^3\right)\). As a consequence, tri-plane representation can use higher resolution features and capture greater detail at the cost of a smaller memory. This allows the model to shift bulk of the expressive power of 3D representation to the explicit features while keeping the decoder network small. Thus, the computational cost inccured during inference is much less when compared to implicit representation like NeRF <a class="citation" href="#NERF">[1]</a>.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The networks shown in Figure 6, summarize the three aproaches mentioned above. The implicit network is accurate but computationally heavy. On the other hand the explicit network is computationally light but memory intensive and the novel hybrid approach finds the middle ground by being light weight and computationally fast.</p>
+
+<p><img src="/images/hybrid_1.jpg" alt="_config.yml" />
+<em>Figure 6 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.</em></p>
+
+<h2 id="references">References</h2>
+
+<p>1)  R.  Chan,  C.  Z.  Lin,  M.  A.  Chan,  K.  Nagano,  B.  Pan,  S.  D.  Mello,O.  Gallo,  L.  Guibas,  J.  Tremblay,  S.  Khamis,  T.  Karras,  and  G.  Wet-zstein,  Efficient  geometry-aware  3D  generative  adversarial  networks, in arXiv, 2021.</p>
+
+<p>2)  B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi,and R. Ng, Nerf: Representing scenes as neural radiance fields for view synthesis, in ECCV, 2020.</p>
+
+<p>3)  Sitzmann,    J.    Thies,    F.    Heide,    M.    Nießner,    G.    Wetzstein, and   M.   Zollh ̈ofer,   Deepvoxels:   Learning   persistent   3d   feature embeddings.</p>
+
+<p>4)  Karras,  S.  Laine,  M.  Aittala,  J.  Hellsten,  J.  Lehtinen,  and  T.  Aila, Analyzing  and  improving  the  image  quality  of  stylegan, CoRR.</p>
+
+
+  </div>
+
+  <div class="date">
+    Written on January 22, 2022
+  </div>
+
+  
+</article>
+
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="https://github.com/deeplearninggan/"><i class="svg-icon github"></i></a>
+
+
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
