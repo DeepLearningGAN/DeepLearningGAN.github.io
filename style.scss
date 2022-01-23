@@ -296,7 +296,10 @@ ol.bibliography li {
   margin: 30px 0;
 
 }
-ol.bibliography { counter-reset: item }
+
+ol.bibliography { counter-reset: item;
+  text-align:justify; }
+
 ol.bibliography li:before {
   content: "[" counter(item) "] ";
   counter-increment: item;
