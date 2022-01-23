@@ -51,10 +51,10 @@ For a side of length $$N$$, the tri-plane representation generates explicit feat
 
 ## Summary ##
 
-The networks shown in Figure 6, summarize the three aproaches mentioned above. The implicit network is accurate but computationally heavy. On the other hand the explicit network is computationally light but memory intensive and the novel hybrid approach finds the middle ground by being light weight and computationally fast. 
+The networks shown in figure 7, summarize the three aproaches mentioned above. The implicit network is accurate but computationally heavy. On the other hand the explicit network is computationally light but memory intensive and the novel hybrid approach finds the middle ground by being light weight and computationally fast. 
 
 ![_config.yml]({{ site.baseurl }}/images/hybrid_1.jpg)
-*Figure 6 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.*
+*Figure 7 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.*
 
 ## References
 {% bibliography --cited %}
