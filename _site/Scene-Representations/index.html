@@ -83,18 +83,20 @@
 <p>Unlike the implicit representation explained above, in this method we express 3D data using explicitly defined shapes like spheres, cubes, cuboids etc. In this approach, we represent the surface by learning a function \(f\) which maps input images to a 3D grid \(f : \mathbb{R}^2 \rightarrow \mathbb{R}^3\). An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes.</p>
 
 <p><img src="/images/voxel_1.jpeg" alt="_config.yml" />
-<em>Figure 3 : Difference between a pixel and voxel.</em></p>
-
-<p>In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car’s surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a \(1\) or \(0\) to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car’s surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface.</p>
-
-<p><img src="/images/voxel_2.jpg" alt="_config.yml" />
+<em>Figure 3 : Difference between a pixel and voxel. For a side of length \(N\), a pixel representation requires \(O\left(N^2\right)\) memory whereas a voxelized representation requires \(O\left(N^3\right)\) memory.</em>
+<img src="/images/voxel_2.jpg" alt="_config.yml" />
 <em>Figure 4 : \(A01 – A05\) are examples of how voxel grids of different resolutions model the surface of a car <a class="citation" href="#VoxelBlog">[3]</a>.</em></p>
 
-<p>This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in \(O(1)\) time. However this method is inefficient in terms of memory usage as voxel grid requires \(O(N^3)\) memory for a side of length \(N\).</p>
+<p>To understand how a voxel grid represents a 3D scene, consider the car shown in figure 4. If we were to approximate this car’s surface using a 3D voxel grid, in the most basic way we fill up each voxel of the grid with a \(1\) or \(0\) to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car’s surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface.</p>
+
+<p><img src="/images/3D-R2N2.jpg" alt="_config.yml" />
+<em>Figure 4 : An overview of a model <a class="citation" href="#3D-R2N2">[4]</a> that takes a sequence of images (or just one image) from arbitrary viewpoints of a scene and generates voxelized 3D reconstruction as output.</em></p>
+
+<p>In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique like <a class="citation" href="#3D-R2N2">[4]</a> armed with a very high resolution voxel grid. This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in \(O(1)\) time. However this method is inefficient in terms of memory usage as voxel grid requires \(O(N^3)\) memory for a side of length \(N\).</p>
 
 <h2 id="hybrid-representation">Hybrid Representation</h2>
 
-<p>This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation <a class="citation" href="#3DGAN">[2]</a> which gives color and volume density as the final 3D representation. As shown in figure 5, first, a generator <a class="citation" href="#StyleGAN2">[4]</a> modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position \((\mathbf{x} \in \mathbb{R}^3)\) is projected onto each of the three feature planes retrieving the corresponding feature vectors \((F_{xy}, F_{xz}, F_{yz})\).</p>
+<p>This method takes the best of the two approaches mentioned above and hence is also called explicit-implicit representation. As an example, we will consider Tri-plane hybrid representation <a class="citation" href="#3DGAN">[2]</a> which gives color and volume density as the final 3D representation. As shown in figure 5, first, a generator <a class="citation" href="#StyleGAN2">[5]</a> modulated using latent vectors and camera parameters generates explicit features. These features are then projected along three axis-aligned orthogonal feature planes. Second, the projected features are aggregated and fed through a small MLP based light weight decoder generating color and volume density. During inference, a query 3D position \((\mathbf{x} \in \mathbb{R}^3)\) is projected onto each of the three feature planes retrieving the corresponding feature vectors \((F_{xy}, F_{xz}, F_{yz})\).</p>
 
 <p><img src="/images/tri-plane-hybrid.jpg" alt="_config.yml" />
 <em>Figure 5 : Sub network from <a class="citation" href="#3DGAN">[2]</a> which generates the tri-plane 3D representation</em></p>
@@ -108,9 +110,11 @@
 <p><img src="/images/hybrid_1.jpg" alt="_config.yml" />
 <em>Figure 6 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.</em></p>
 
+<h2 id="references">References</h2>
 <ol class="bibliography"><li><span id="NERF">B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi, and R. Ng, <a href="https://arxiv.org/abs/2003.08934">“NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis,”</a> in <i>ECCV</i>, 2020.</span></li>
 <li><span id="3DGAN">E. R. Chan <i>et al.</i>, <a href="https://arxiv.org/abs/2112.07945">“Efficient Geometry-aware 3D Generative Adversarial Networks,”</a> in <i>arXiv</i>, 2021.</span></li>
 <li><span id="VoxelBlog"><a href="http://www.bilderzucht.de/blog/3d-pixel-voxel/">“3D Pixel / Voxel.”</a> .</span></li>
+<li><span id="3D-R2N2">C. B. Choy, D. Xu, J. Y. Gwak, K. Chen, and S. Savarese, <a href="https://arxiv.org/abs/1604.00449">“3D-R2N2: A Unified Approach for Single and Multi-view 3D Object Reconstruction,”</a> in <i>Proceedings of the European Conference on Computer Vision (ECCV)</i>, 2016.</span></li>
 <li><span id="StyleGAN2">T. Karras, S. Laine, M. Aittala, J. Hellsten, J. Lehtinen, and T. Aila, <a href="https://arxiv.org/abs/1912.04958">“Analyzing and Improving the Image Quality of StyleGAN,”</a> in <i>2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>, 2020, pp. 8107–8116.</span></li></ol>
 
   </div>
