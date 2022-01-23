@@ -29,14 +29,16 @@ Although using this method we get the complete information of the scene, the dow
 Unlike the implicit representation explained above, in this method we express 3D data using explicitly defined shapes like spheres, cubes, cuboids etc. In this approach, we represent the surface by learning a function $$f$$ which maps input images to a 3D grid $$f : \mathbb{R}^2 \rightarrow \mathbb{R}^3 $$. An example of such a 3D representation is Voxel grid. Voxels are essentially 3D pixels shaped in the form of perfect cubes.
 
 ![_config.yml]({{ site.baseurl }}/images/voxel_1.jpeg)
-*Figure 3 : Difference between a pixel and voxel.*
-
-In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique armed with a very high resolution voxel grid. To understand how a voxel grid represents a 3D scene, consider the car shown in Figure 4. If we were to approximate this car's surface using the 3D voxel grid, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car's surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface. 
-
+*Figure 3 : Difference between a pixel and voxel. For a side of length $$N$$, a pixel representation requires $$O\left(N^2\right)$$ memory whereas a voxelized representation requires $$O\left(N^3\right)$$ memory.*
 ![_config.yml]({{ site.baseurl }}/images/voxel_2.jpg)
 *Figure 4 : $$ A01 – A05 $$ are examples of how voxel grids of different resolutions model the surface of a car {% cite VoxelBlog %}.*
 
-This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $$ O(1) $$ time. However this method is inefficient in terms of memory usage as voxel grid requires $$O(N^3)$$ memory for a side of length $$N$$.
+To understand how a voxel grid represents a 3D scene, consider the car shown in figure 4. If we were to approximate this car's surface using a 3D voxel grid, in the most basic way we fill up each voxel of the grid with a $$ 1 $$ or $$ 0 $$ to represent whether or not a part of the car surface is present at that voxel location. Hence using this binary method to populate the voxel grid, we can form a very coarse way to approximate the car's surface. To also represent finer surface textures, we can increase the number of voxels in the voxel grid there by increasing the number of voxels corresponding to a particular point on the surface.
+
+![_config.yml]({{ site.baseurl }}/images/3D-R2N2.jpg)
+*Figure 4 : An overview of a model {% cite 3D-R2N2 %} that takes a sequence of images (or just one image) from arbitrary viewpoints of a scene and generates voxelized 3D reconstruction as output.*
+
+In theory, voxel grid is a fast technique for modelling complex surfaces. We can accurately replicate real world objects by employing a proper rendering technique like {% cite 3D-R2N2 %} armed with a very high resolution voxel grid. This approach addresses the inference time problem associated with the implicit representation because in this case we can query the voxel grid in $$O(1)$$ time. However this method is inefficient in terms of memory usage as voxel grid requires $$O(N^3)$$ memory for a side of length $$N$$.
 
 ## Hybrid Representation ##
 
@@ -54,4 +56,5 @@ The networks shown in Figure 6, summarize the three aproaches mentioned above. T
 ![_config.yml]({{ site.baseurl }}/images/hybrid_1.jpg)
 *Figure 6 : Comparison between (a) Implicit, (b) Explicit and (c) Hybrid representations.*
 
+## References
 {% bibliography --cited %}
