@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A Radiance Field Approach to Volume Rendering – Expedite AI. – Illustrative blogs on state of the art deep learning models.</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="The term rendering refers to a set of techniques used to generate 2D projections from 3D data of a scene. Most multi view image synthesis pipelines can be divided into 2 blocks. First, scene representation block which constructs a 3D scene representation from multi view images of a given scene. Second, a volume rendering block which is used to generate novel view images of the scene from the learnt 3D scene representation. Depending on the type of representation used in the first block, there exist several volume rendering approaches. In this blog, we explain a radiance field based volume rendering approach.
+" />
+    <meta property="og:description" content="The term rendering refers to a set of techniques used to generate 2D projections from 3D data of a scene. Most multi view image synthesis pipelines can be divided into 2 blocks. First, scene representation block which constructs a 3D scene representation from multi view images of a given scene. Second, a volume rendering block which is used to generate novel view images of the scene from the learnt 3D scene representation. Depending on the type of representation used in the first block, there exist several volume rendering approaches. In this blog, we explain a radiance field based volume rendering approach.
+" />
+    
+    <meta name="author" content="Expedite AI." />
+
+    
+    <meta property="og:title" content="A Radiance Field Approach to Volume Rendering" />
+    <meta property="twitter:title" content="A Radiance Field Approach to Volume Rendering" />
+    
+
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Expedite AI. - Illustrative blogs on state of the art deep learning models." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://images.squarespace-cdn.com/content/v1/5146b221e4b00ba8e4c01f4a/1570586407352-JCK3FP8T7UDR9NNRKM8F/face-tracking-arkit-ios-app-development.gif" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Expedite AI.</a></h1>
+            <p class="site-description">Illustrative blogs on state of the art deep learning models.</p>
+          </div>
+
+          <nav>
+            <a href="/">Blog</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <center>
+  <h1 style="margin-bottom: 0;">A Radiance Field Approach to Volume Rendering</h1>
+  <p style = "margin-top: 0; margin-bottom: 1cm; text-align:center;">Sidharth Nair, Meher Abhijeet</p>
+  </center>
+
+  <div class="entry">
+    <p>The term rendering refers to a set of techniques used to generate 2D projections from 3D data of a scene. Most multi view image synthesis pipelines can be divided into 2 blocks. First, scene representation block which constructs a 3D scene representation from multi view images of a given scene. Second, a volume rendering block which is used to generate novel view images of the scene from the learnt 3D scene representation. Depending on the type of representation used in the first block, there exist several volume rendering approaches. In this blog, we explain a radiance field based volume rendering approach.</p>
+
+<p><img src="/images/volume_rendering.jpg" alt="_config.yml" />
+<em>Figure 1 : When queried with a viewing direction, a rendering block generates a 2D projection of the scene <a class="citation" href="#DifferentiableRendering">[1]</a>.</em></p>
+
+<h2 id="volume-rendering">Volume Rendering</h2>
+
+<p>A radiance field \(\mathcal{L}\left(\mathbf{x}, \boldsymbol{\theta}\right)\) is a function which maps a point in 3D space \((\mathbf{x})\) and the viewing direction \((\boldsymbol{\theta})\) to a color \(\left(\mathbf{c}\right)\). In practice, the direction \(\boldsymbol{\theta}\) is given by the unit vector \(\mathbf{d}\). So radiance field will be \(\mathcal{L}\left(\mathbf{x}, \mathbf{d}\right)\). Consider points along a ray \(\left(\mathbf{r}\right)\) given by \(\mathbf{x}\left(t\right) = \mathbf{o} + t \mathbf{d}\) where \(\mathbf{o}\) is the origin and \(t \in [t_n, t_f]\) such that \(t_n\) is near bound and \(t_f\) is far bound. The expected color of this ray will be given by</p>
+
+\[C \left(\mathbf{r} \right) = \int_{t_n}^{t_f} \mathbf{c}\left(\mathbf{x}\left(t\right), \mathbf{d} \right) dt\]
+
+<p>In the above equation, we have not considered whether the point is on a particle or not. Intuitively, the expected color of the ray should be influenced more by the colors on the particles. This can be incorporated by weighing color at each point with a term that gives high value if a particle is present and a low value otherwise. We will use volume density \(\sigma\left(\mathbf{x}\right)\) as the weighing term which can be interpreted as the probability of a ray terminating on a particle at \(\mathbf{x}\). The expected color will now be given by</p>
+
+\[\begin{equation}
+    C\left(\mathbf{r}\right) = \int_{t_n}^{t_f} \sigma\left(\mathbf{x}\left(t\right)\right) \mathbf{c}\left(\mathbf{x}\left(t\right), \mathbf{d}\right) dt
+\end{equation}\]
+
+<p>Once a ray has hit an opaque particle at \(t_i\), it terminates. So points beyond \(t_i\) will not contribute to the expected color of the ray. For this, we will introduce a term known as accumulated transmittance which gives the probability of a ray travelling from \(t_n\) to \(t\) without hitting any particle. It is given by</p>
+
+\[\begin{equation}
+    T\left(t\right) = \text{exp}\left(-\int_{t_n}^t \sigma\left(\mathbf{x}\left(s\right)\right) ds\right)
+    \tag{1}
+\end{equation}\]
+
+<p>Incorporating all the factors, the expected color of a ray \(\mathbf{r}\) will be given by</p>
+
+\[\begin{equation}
+    C\left(\mathbf{r}\right) = \int_{t_n}^{t_f} T\left(t\right) \sigma\left(\mathbf{x}\left(t\right)\right) \mathbf{c}\left(\mathbf{x}\left(t\right), \mathbf{d}\right) dt
+    \tag{2}
+\end{equation}\]
+
+<p>Since it is practically not possible to have a continuous set of points, the above integral is numerically estimated using quadrature rule <a class="citation" href="#QuadratureFormulaBlog">[2]</a> for a discrete set of points \(\{t_i\}_{i=1}^N\). We define \(\delta_i = t_{i+1} - t_i\) as the distance between adjacent samples. The estimated accumulated transmittance \(\hat{T}\) and \(\hat{C}\) are given by</p>
+
+\[\begin{equation}
+    T_i = \text{exp}\left(-\sum_{j=1}^{i-1} \sigma_j \delta_j \right)
+    \tag{3}
+\end{equation}\]
+
+\[\begin{equation}
+    \hat{C}\left(r\right) = \sum_{i=1}^{N} T_i \left(1 - \text{exp}\left( -\sigma_i \delta_i \right) \right) \mathbf{c}_i
+    \tag{4}
+\end{equation}\]
+
+<p>The above equation can be interpreted as a linear combination of colors along the sampled points on the ray. Thus the expected color can be written as</p>
+
+\[\begin{equation}
+    \hat{C} = \sum\limits_{i=1}^{N} w_i \mathbf{c}_i
+    \tag{5}
+    \label{eq:weighted}
+\end{equation}\]
+
+<p>where \(w_i\) is the weight given to \(\mathbf{c}_i\) and is given by \(w_i = T_i \left(1 - \text{exp}\left( -\sigma_i \delta_i \right) \right)\). The weight is made up of two terms with the first term taking into account historical information and the second term the current information.</p>
+
+<p>When radiance field gives output in RGB color space i.e. \(\mathbf{c} \in \mathbb{R}^3\) is an RGB vector, the output of volume rendering is the final image. But, when \(\mathbf{c} \in \mathbb{R}^d\) is a feature vector, the output of volume rendering is a feature image. Feature images contain more information that can be used for image space refinement <a class="citation" href="#GIRAFFE">[3]</a>. This allows rendering at lower resolutions and then upsampling to required resolution using convolutional layers. Rendering at lower resolutions helps in faster training and maintaining interactive frame rates.</p>
+
+<h2 id="sampling-points-along-a-ray">Sampling points along a ray</h2>
+
+<p>The color of each pixel in the generated image is found from the ray terminating at that pixel. Hence to accurately estimate the pixel color, we ideally would need the color information at every point along that ray from \([t_n, t_f]\). Since it is not practically possible to consider every point along the ray, we sample points along it.</p>
+
+<p><img src="/images/termination.png" alt="_config.yml" />
+<em>Figure 2 : Uniform sampling of points results in most points not contributing to the expected color of the ray. <a class="citation" href="#TermiNERF">[4]</a></em></p>
+
+<p>The two most commonly used sampling techniques are Stratified sampling and Hierarchical volume sampling or Importance sampling <a class="citation" href="#NERF">[5]</a>. Consider a ray \(\mathbf{r}\) originating from the point \(\mathbf{o}\). The stratified sampling approach builds upon uniform sampling wherein we take \(N\) equidistant points along the ray. Here, we uniformly divide \(\mathbf{r}\) into \(N\) evenly spaced bins \(\{b_i\}_{i=1}^{N}\) and then draw one sample uniformly at random from each bin. In this approach the number of points sampled will be equal to the number of bins.</p>
+
+\[\begin{equation}
+   t_i \sim U \left[ t_n + \frac{i-1}{N} ( t_f - t_n ), t_n + \frac{i}{N} ( t_f -t_n )  \right]
+\end{equation}\]
+
+<p>One evident drawback of this approach is that it picks one sample from each bin without considering the contribution of that sample to the final image. This approach also samples from free spaces and occluded regions along the path of \(\mathbf{r}\) that do not contribute to the rendered image. To address this issue a hierarchical sampling approach is used which increases rendering efficiency by allocating samples proportionally to their expected effect on the final rendering.</p>
+
+<p>In Hierarchical / Importance sampling approach, two sets of points are sampled. First, a set of \(N_c\) locations are sampled using stratified sampling and a “coarse” network is evaluated at these locations using equation \(\ref{eq:weighted}\). The expected coarse color \(\hat{C}_c\) of the ray can be formally written as:</p>
+
+\[\hat{C_c} = \sum_{i=1}^{N_c} w_i \mathbf{c}_i\]
+
+<p>The “coarse” output color \(\hat{C}_c\) is refined by re-sampling points along the ray. This “fine” re-sampling is performed by taking into account \(w_i\), which is a direct indication of the contribution of each of the previously sampled \(N_c\) points.</p>
+
+<p>While re-sampling, the task is to have more samples around the points for which \(w_i\) is higher. This is achieved by performing inverse transform sampling.</p>
+
+<h3 id="inverse-transform-sampling">Inverse transform sampling</h3>
+
+<p>Given a uniform distribution \(\mathcal{U}(0,1)\) and a target distribution \(f_X(x)\), inverse transform sampling finds a transformation \(T\) such that, \(T(\mathcal{U}) \sim f_X(x)\).</p>
+
+<p><img src="/images/ITS.jpg" alt="_config.yml" />
+<em>Figure 3 : Inverse transform sampling is used to find the transformation which converts uniform distribution to an arbitrary target distribution.</em></p>
+
+<p>If we consider \(F_X(x)\) as the CDF of the target distribution, the relation between \(T\) and \(F_X(x)\) can be found as follows:</p>
+
+\[F_x(x) = P ( X \leq x ) = P ( T ( U ) \leq x ) = P ( U \leq T^{-1}(x) ) = T^{-1}(x)\]
+
+<p>Hence, the required transformation is the inverse of the CDF of the target distribution.</p>
+
+<p>This approach can be employed for re-sampling the points by transforming \(\mathcal{U} \left[ 0 , 1 \right]\) to get the target PDF \(f_X(x)\) which can be obtained by normalizing the weights \(w_i\).</p>
+
+\[f_X(x) = \frac{w_i}{\sum\limits_{j=1}^{N_c} w_j } ~~~~ x \in b_i\]
+
+<p>Hence, sampling \(F_X^{-1}(x)\) will generate points closer to the initial set of samples whose corresponding \(w_i\) was higher. The second set of \(N_f\) locations sampled from this distribution along with the initial \(N_c\) samples are used to evaluate the “fine” network. The final rendered color of the ray can be found by evaluating equation \(\ref{eq:weighted}\) at all \(N_c + N_f\) samples.</p>
+
+<h2 id="summary">Summary</h2>
+<p>Given a 3D scene representation, the task of a rendering block is to generate 2D projections of the scene. This block estimates the color of each pixel in the output image by sampling points along the ray which terminates at that pixel. This blog explains in detail, a radiance field based volume rendering approach and sampling strategies associated with it.</p>
+
+<h2 id="references">References</h2>
+<ol class="bibliography"><li><span id="DifferentiableRendering">M. Niemeyer, L. Mescheder, M. Oechsle, and A. Geiger, <a href="https://arxiv.org/abs/1912.07372v1">“Differentiable Volumetric Rendering: Learning Implicit 3D Representations Without 3D Supervision,”</a> in <i>2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>, 2020, pp. 3501–3512.</span></li>
+<li><span id="QuadratureFormulaBlog"><a href="http://encyclopediaofmath.org/index.php?title=Gauss_quadrature_formula&amp;oldid=43647">“Gauss quadrature formula.”</a> Encyclopedia of Mathematics.</span></li>
+<li><span id="GIRAFFE">M. Niemeyer and A. Geiger, <a href="https://arxiv.org/abs/2011.12100">“GIRAFFE: Representing Scenes as Compositional Generative Neural Feature Fields,”</a> in <i>2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>, 2021, pp. 11448–11459.</span></li>
+<li><span id="TermiNERF">M. Piala and R. Clark, <a href="https://arxiv.org/abs/2111.03643">“TermiNeRF: Ray Termination Prediction for Efficient Neural Rendering,”</a> in <i>2021 International Conference on 3D Vision (3DV)</i>, 2021, pp. 1106–1114.</span></li>
+<li><span id="NERF">B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi, and R. Ng, <a href="https://arxiv.org/abs/2003.08934">“NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis,”</a> in <i>ECCV</i>, 2020.</span></li></ol>
+
+  </div>
+
+  <div class="date">
+    Written on February 15, 2022
+  </div>
+
+  
+</article>
+
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="https://github.com/deeplearninggan/"><i class="svg-icon github"></i></a>
+
+
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
